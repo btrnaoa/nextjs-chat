@@ -8,7 +8,7 @@ export default function MessageItem({ message }: MessageItemProps) {
   const time = new Date(message.createdAt).toLocaleString([], {
     hour: 'numeric',
     minute: 'numeric',
-    hour12: true,
+    hourCycle: 'h12',
   });
   return (
     <li>

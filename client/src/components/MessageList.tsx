@@ -1,5 +1,6 @@
-import { Message } from '@/types/chat';
-import { useEffect, useState } from 'react';
+import { getMessages } from '@/pages/api/chat';
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 import { Socket } from 'socket.io-client';
 import MessageItem from './MessageItem';
 
@@ -8,24 +9,31 @@ interface MessageListProps {
 }
 
 export default function MessageList({ socket }: MessageListProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const onMessage = (message: Message) =>
-      setMessages((prev) => [...prev, message]);
+    const handleOnMessage = () => {
+      queryClient.invalidateQueries('messages');
+    };
 
-    socket.on('message', onMessage);
+    socket.on('message', handleOnMessage);
 
     return () => {
-      socket.off('message', onMessage);
+      socket.off('message', handleOnMessage);
     };
-  }, [messages, socket]);
+  }, [queryClient, socket]);
+
+  const { data: messages } = useQuery({
+    queryKey: 'messages',
+    queryFn: getMessages,
+  });
 
   return (
     <ul>
-      {messages.map((message) => (
-        <MessageItem key={message.id} message={message} />
-      ))}
+      {messages &&
+        messages.map((message) => (
+          <MessageItem key={message.id} message={message} />
+        ))}
     </ul>
   );
 }
