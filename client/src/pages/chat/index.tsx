@@ -1,9 +1,12 @@
 import MessageBox from '@/components/MessageBox';
 import { getMessages } from '@/pages/api/chat';
+import { signIn, useSession } from 'next-auth/react';
 import { QueryClient, dehydrate } from 'react-query';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:3001');
+const socket = io('http://localhost:3001', {
+  withCredentials: true,
+});
 
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
@@ -18,6 +21,15 @@ export async function getServerSideProps() {
 }
 
 export default function Chat() {
+  const { data: session } = useSession();
+  if (!session) {
+    return (
+      <>
+        <p>Access Denied</p>
+        <button onClick={() => signIn()}>Sign In</button>
+      </>
+    );
+  }
   return (
     <>
       <MessageBox socket={socket} />

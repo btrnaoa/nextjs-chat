@@ -12,7 +12,7 @@ export default function MessageItem({ message }: MessageItemProps) {
   });
   return (
     <li>
-      {message.content} {time.toUpperCase()}
+      {time.toUpperCase()} {message.user.name}: {message.content}
     </li>
   );
 }
