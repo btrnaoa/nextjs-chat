@@ -19,9 +19,14 @@ export default function MessageForm({ socket }: MessageFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={message} onChange={handleChange} />
-      <button>Send</button>
+    <form className="flex" onSubmit={handleSubmit}>
+      <input
+        className="flex-grow px-2 py-1 mr-4 text-gray-200 bg-transparent border border-gray-600"
+        type="text"
+        value={message}
+        onChange={handleChange}
+      />
+      <button className="px-2 py-1 text-gray-400">Send</button>
     </form>
   );
 }

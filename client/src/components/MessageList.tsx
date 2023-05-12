@@ -29,7 +29,7 @@ export default function MessageList({ socket }: MessageListProps) {
   });
 
   return (
-    <ul>
+    <ul className='space-y-4'>
       {messages &&
         messages.map((message) => (
           <MessageItem key={message.id} message={message} />
